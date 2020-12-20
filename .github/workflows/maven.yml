@@ -20,7 +20,7 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: mvn -B package --file pom.xml -s repsy-settings.xml -Dmaven.test.skip=true
+      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
       
     - name: Login to DockerHub
       uses: docker/login-action@v1
