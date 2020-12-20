@@ -29,4 +29,4 @@ COPY --from=build /jdk-minimal /opt/jdk/
 COPY --from=build /build/target/*.jar /app.jar
 VOLUME /tmp
 EXPOSE 8080
-CMD /opt/jdk/bin/java -jar /app.jar
+CMD /opt/jdk/bin/java -jar /app.jar --spring.config.location=file:/config/application.properties
