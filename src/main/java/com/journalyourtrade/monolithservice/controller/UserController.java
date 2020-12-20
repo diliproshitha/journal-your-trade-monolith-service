@@ -58,9 +58,9 @@ public class UserController {
     public ResponseEntity<?> createWebUser(@Validated @RequestBody JYTUserDto userDto) {
         try {
             userDetailsService.createWebUser(userDto);
-            return ResponseEntity.ok("User created successfully");
+            return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
         } catch (UserExistException e) {
-            return new ResponseEntity("User already exists!", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("User already exists!", HttpStatus.FORBIDDEN);
         }
     }
 }

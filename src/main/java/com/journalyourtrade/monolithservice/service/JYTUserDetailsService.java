@@ -45,7 +45,7 @@ public class JYTUserDetailsService implements UserDetailsService {
 
         Optional<JYTUser> user = userRepository.findByEmail(userDto.getEmail());
 
-        if (user.get() != null) {
+        if (!user.isEmpty()) {
             throw new UserExistException();
         }
 
