@@ -29,5 +29,5 @@ jobs:
         password: ${{ secrets.TREESCALE_PASSWORD }}
         registry: repo.treescale.com
     
-    - run: docker build . -t repo.treescale.com/diliproshitha/journal-your-trade-monlith-service:latest && docker push repo.treescale.com/diliproshitha/journal-your-trade-monolith-service:latest
+    - run: docker build . -t repo.treescale.com/diliproshitha/journal-your-trade-monolith-service:latest && docker push repo.treescale.com/diliproshitha/journal-your-trade-monolith-service:latest
   
