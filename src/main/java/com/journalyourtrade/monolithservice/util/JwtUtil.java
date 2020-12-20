@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,20 +22,19 @@ import java.util.function.Function;
 @Slf4j
 public class JwtUtil {
 
-    // TODO - replace secret
-    private String SECRET_KEY = "";
+    private byte[] SECRET_KEY;
     private Key signKey;
 
     @Autowired
     public JwtUtil(SysConfiguration sysConfiguration) {
         try {
-            this.SECRET_KEY = sysConfiguration.getConfigValue(SysConfiguration.JWT_SECRET);
+            this.SECRET_KEY = Base64.getEncoder().encode(sysConfiguration.getConfigValue(SysConfiguration.JWT_SECRET).getBytes());
         } catch (ConfigNotFoundException e) {
             this.SECRET_KEY = null;
             log.error("JWT secret not found!");
         }
 
-        this.signKey = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
+        this.signKey = new SecretKeySpec(SECRET_KEY, SignatureAlgorithm.HS256.getJcaName());
     }
 
     public String extractUsername(String token) {
@@ -63,11 +63,10 @@ public class JwtUtil {
         return createToken(claims, userDetails.getUsername());
     }
 
-    // TODO - remove deprecated
     private String createToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 10)))
                 .signWith(signKey).compact();
     }
 

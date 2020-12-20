@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -39,6 +40,20 @@ public class JYTUserDetailsService implements UserDetailsService {
         user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + userName));
 
         return user.map(JYTUserDetails::new).get();
+    }
+
+    public JYTUserDto loadUserDtoByUsername(String userName) throws UsernameNotFoundException {
+        Optional<JYTUser> user = userRepository.findByEmail(userName);
+
+        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + userName));
+
+        JYTUser jytUser = user.get();
+        return JYTUserDto.builder()
+                .email(jytUser.getEmail())
+                .firstName(jytUser.getFirstName())
+                .lastName(jytUser.getLastName())
+                .roles(jytUser.getRoles().stream().map(role -> role.getRoleName()).collect(Collectors.toList()))
+                .build();
     }
 
     public JYTUser createWebUser(JYTUserDto userDto) throws UserExistException {

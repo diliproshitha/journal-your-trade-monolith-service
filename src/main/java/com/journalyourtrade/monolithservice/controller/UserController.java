@@ -6,7 +6,9 @@ import com.journalyourtrade.monolithservice.model.web.AuthenticationRespone;
 import com.journalyourtrade.monolithservice.model.web.JYTUserDto;
 import com.journalyourtrade.monolithservice.service.JYTUserDetailsService;
 import com.journalyourtrade.monolithservice.util.JwtUtil;
+import com.journalyourtrade.monolithservice.util.UserUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -30,14 +34,10 @@ public class UserController {
         return new ResponseEntity("hello public", HttpStatus.OK);
     }
 
-    @GetMapping("/user")
-    public ResponseEntity getUser() {
-        return new ResponseEntity("hello user", HttpStatus.OK);
-    }
-
-    @GetMapping("/admin")
-    public ResponseEntity getAdmin() {
-        return new ResponseEntity("hello admin", HttpStatus.OK);
+    @GetMapping("/getUser")
+    public ResponseEntity getUser(@RequestHeader HttpHeaders headers) {
+        final String username = UserUtil.getUsernameFromHeaders(headers, jwtTokenUtil);
+        return new ResponseEntity(userDetailsService.loadUserDtoByUsername(username), HttpStatus.OK);
     }
 
     @PostMapping("/authenticate")
