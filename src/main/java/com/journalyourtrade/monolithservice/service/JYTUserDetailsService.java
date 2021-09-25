@@ -5,6 +5,7 @@ import com.journalyourtrade.monolithservice.model.configuration.JYTUserDetails;
 import com.journalyourtrade.monolithservice.model.entity.JYTUser;
 import com.journalyourtrade.monolithservice.model.entity.Role;
 import com.journalyourtrade.monolithservice.model.entity.Roles;
+import com.journalyourtrade.monolithservice.model.web.JYTInternalUserDto;
 import com.journalyourtrade.monolithservice.model.web.JYTUserDto;
 import com.journalyourtrade.monolithservice.repository.JYTUserRepository;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +58,7 @@ public class JYTUserDetailsService implements UserDetailsService {
                 .build();
     }
 
-    public JYTUser createWebUser(JYTUserDto userDto) throws UserExistException {
+    public JYTUser createWebUser(JYTInternalUserDto userDto) throws UserExistException {
 
         Optional<JYTUser> user = userRepository.findByEmail(userDto.getEmail());
 
@@ -75,5 +77,10 @@ public class JYTUserDetailsService implements UserDetailsService {
                 .roles(roles)
                 .build();
         return userRepository.save(jytUser);
+    }
+
+    @Transactional
+    public void deleteUserByUsername(String username) throws Exception {
+        userRepository.deleteByEmail(username);
     }
 }

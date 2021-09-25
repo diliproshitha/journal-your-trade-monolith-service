@@ -14,10 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JYTUserDto {
+public class JYTInternalUserDto {
 
     @Email
     private String email;
+
+    @NotBlank
+    private String password;
 
     @NotBlank
     private String firstName;

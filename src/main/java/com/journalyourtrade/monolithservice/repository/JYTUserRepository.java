@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface JYTUserRepository extends JpaRepository<JYTUser, Integer> {
 
     Optional<JYTUser> findByEmail(String email);
+
+    void deleteByEmail(String email);
 }
